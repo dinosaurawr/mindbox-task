@@ -42,7 +42,7 @@ VALUES
 ## REQUEST ##
 
 SELECT 
-  products.id, products.name, categories.category
+  products.name, categories.category
 FROM
   products
 LEFT JOIN
