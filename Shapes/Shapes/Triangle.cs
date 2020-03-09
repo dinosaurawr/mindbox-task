@@ -6,62 +6,49 @@ namespace Shapes
 {
     public class Triangle : Shape
     {
-        public double Hypotenuse { get; set; }
-        public double FirstCathetus { get; set; }
-        public double Secondcathetus { get; set; }
+        private readonly double hypotenuse;
+        private readonly double firstCathetus;
+        private readonly double secondCathetus;
         private readonly double halfPerimeter;
 
         public Triangle(double firstSide, double secondSide, double thirdSide)
         {
-            if (firstSide < 0 || secondSide < 0 || thirdSide < 0)
-            {
-                throw new ArgumentOutOfRangeException();
-            }
-            if (!this.IsTriangleExist(firstSide, secondSide, thirdSide))
-            {
-                throw new TriangleDoesNotExistException();
-            }
-            double[] sides = { firstSide, secondSide, thirdSide };
-            this.Hypotenuse = sides.Max();
-            this.halfPerimeter = (firstSide + secondSide + thirdSide) / 2;
-            int hypotenuseInd = Array.IndexOf(sides, this.Hypotenuse);
-            sides = sides.Where((val, ind) => ind != hypotenuseInd).ToArray();
-            this.FirstCathetus = sides[0];
-            this.Secondcathetus = sides[1];
+            if (firstSide < 0 || secondSide < 0 || thirdSide < 0) throw new ArgumentOutOfRangeException();
+            if (!this.IsTriangleExist(firstSide, secondSide, thirdSide)) throw new TriangleDoesNotExistException();
+
+            var sides = new[] { firstSide, secondSide, thirdSide };
+            hypotenuse = sides.Max();
+
+            var hypotenuseInd = Array.IndexOf(sides, hypotenuse);
+            var catets = sides.Where((_, ind) => ind != hypotenuseInd).ToArray();
+            firstCathetus = catets[0];
+            secondCathetus = catets[1];
+
+            halfPerimeter = (firstSide + secondSide + thirdSide) / 2;
         }
 
 
         private bool IsTriangleExist(double firstSide, double secondSide, double thirdSide)
         {
-            if (
-                firstSide + secondSide > thirdSide &&
-                firstSide + thirdSide > secondSide &&
-                secondSide + thirdSide > firstSide)
-            {
-                return true;
-            }
-            return false;
+            return firstSide + secondSide > thirdSide &&
+                   firstSide + thirdSide > secondSide &&
+                   secondSide + thirdSide > firstSide;
         }
 
         public bool IsTriangleRight()
         {
-            return Math.Pow(this.Hypotenuse, 2) == Math.Pow(this.FirstCathetus, 2) + Math.Pow(this.Secondcathetus, 2);
+            return Math.Pow(hypotenuse, 2) == Math.Pow(firstCathetus, 2) + Math.Pow(secondCathetus, 2);
         }
 
         public override double GetArea()
         {
-            if (this.IsTriangleRight())
-            {
-                return (this.FirstCathetus * this.Secondcathetus) / 2;
-            }
-            else
-            {
-                return Math.Sqrt(
-                    this.halfPerimeter *
-                    (this.halfPerimeter - this.Hypotenuse) *
-                    (this.halfPerimeter - this.FirstCathetus) *
-                    (this.halfPerimeter - this.Secondcathetus));
-            }
+            if (IsTriangleRight())
+                return (firstCathetus * secondCathetus) / 2;
+            return Math.Sqrt(
+                halfPerimeter *
+                (halfPerimeter - hypotenuse) *
+                (halfPerimeter - firstCathetus) *
+                (halfPerimeter - secondCathetus));
         }
     }
 }

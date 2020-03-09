@@ -10,18 +10,19 @@ namespace ShapesTests
         [TestMethod]
         public void GetArea_ValidRadius_GetRightArea()
         {
-            double expectedArea = Math.PI * 144;
-            Circle circle = new Circle(12);
-            double actualArea = circle.GetArea();
+            const int radius = 2;
+            var expectedArea = Math.PI * Math.Pow(radius, 2);
+
+            var circle = new Circle(radius);
+            var actualArea = circle.GetArea();
 
             Assert.AreEqual(expectedArea, actualArea);
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void GetArea_InvalidRadius_ThrowArgumentOutOfRangeException()
         {
-            Circle circle = new Circle(-2);
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => new Circle(-1));
         }
     }
 }
